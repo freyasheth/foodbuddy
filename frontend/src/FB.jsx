@@ -24,7 +24,7 @@ const API_BASE =
         process?.env &&
         process.env.REACT_APP_API_URL &&
         process.env.REACT_APP_API_URL.trim()) ||
-    'http://127.0.0.1:8000';
+    'https://foodbuddy-backend-x9qp.onrender.com';
 
 function normalizeIngredients(input) {
     return String(input || '')
