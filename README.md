@@ -1,109 +1,166 @@
 # FoodBuddy
 
-FoodBuddy is an ingredient copilot that translates food labels into plain-English explanations, highlights what’s worth paying attention to, and communicates trade-offs and uncertainty instead of pretending there’s a single “good vs bad” answer.
+FoodBuddy is your quick, honest companion to decode food labels.
 
-## What it does
+It helps translate confusing ingredient lists into simple, easy-to-understand explanations so you can make sense of what you’re eating, without judgment or fear-based labels.
 
-- Paste an ingredient list from any packaged food label
-- Get a clear explanation for each ingredient in simple language
-- See an overall risk signal (low / medium / high) and a numeric score
-- Get short “watch-outs” (e.g., high sodium, added sugars, oils, additives)
-- Transparency-first: it reminds you when effects depend on portion size, frequency, and personal context
+---
 
-## Tech stack
+## Live Demo
 
-Frontend:
-- React (Create React App)
-- Axios
-- Custom CSS UI
+Frontend (Vercel):  
+https://foodbuddy-bay.vercel.app/
 
-Backend:
-- FastAPI (Python)
-- JSON API
-- Rule/heuristic ingredient analysis (prototype)
+Backend API (Render):  
+https://foodbuddy-backend-x9qp.onrender.com
 
-## Project structure
+---
+
+## Repository
+
+GitHub Repo:  
+https://github.com/freyasheth/foodbuddy
+
+This is a single repository containing both frontend and backend.
 
 foodbuddy/
-  backend/
-  frontend/
-  README.md
-  .gitignore
+├── frontend/   # React frontend (Vercel)
+├── backend/    # FastAPI backend (Render)
+└── README.md
 
-## Run locally
+---
 
-### 1) Backend (FastAPI)
+## What FoodBuddy Does
 
-From the project root:
+- Accepts ingredient lists in any messy format (commas, new lines, copied labels)
+- Identifies common attention-worthy ingredients like sugars, oils, salt, and additives
+- Explains each ingredient in plain English
+- Gives an overall summary to help users quickly understand the label
 
-cd backend
+FoodBuddy does not classify food as good or bad.  
+It focuses on clarity and understanding.
 
-Create and activate a virtual environment:
+---
 
-Windows (PowerShell):
-python -m venv .venv
-.venv\Scripts\activate
+## How It Works
 
-macOS / Linux:
-python -m venv .venv
-source .venv/bin/activate
+1. User pastes an ingredient list into the web app
+2. Frontend sends the data to the backend /analyze endpoint
+3. Backend processes the ingredients and returns:
+   - a readable breakdown
+   - an overall score and tags
+4. Frontend displays results as clean, easy-to-scan cards
 
-Install dependencies and start the server:
+---
 
-pip install -r requirements.txt
-uvicorn main:app --reload
+## Tech Stack
 
-Backend URL:
-http://127.0.0.1:8000
+Frontend:
+- React
+- Axios
+- Deployed on Vercel
 
-### 2) Frontend (React)
+Backend:
+- FastAPI
+- Uvicorn
+- Deployed on Render
 
-From the project root:
+Frontend and backend are deployed independently and communicate via API.
 
-cd frontend
-npm install
-npm start
+---
 
-Frontend URL:
-http://localhost:3000
+## Run Locally
 
-## API
+### Backend (FastAPI)
 
-POST /analyze
+From the repo root:
+
+cd backend  
+python -m venv .venv  
+
+Activate virtual environment:
+
+Windows:  
+.\.venv\Scripts\Activate.ps1  
+
+Mac/Linux:  
+source .venv/bin/activate  
+
+Install dependencies:
+
+pip install -r requirements.txt  
+
+Run server:
+
+uvicorn main:app --reload --host 127.0.0.1 --port 8000  
+
+Backend will be available at:  
+http://127.0.0.1:8000  
+
+---
+
+### Frontend (React)
+
+From the repo root:
+
+cd frontend  
+npm install  
+
+Create a .env file inside frontend/:
+
+REACT_APP_API_URL=http://127.0.0.1:8000  
+
+Start frontend:
+
+npm start  
+
+Frontend will run at:  
+http://localhost:3000  
+
+---
+
+## API Reference
+
+### POST /analyze
 
 Request body:
+
 {
   "ingredients": "wheat flour, palm oil, salt, monosodium glutamate"
 }
 
-Response (example):
+Response body:
+
 {
-  "analysis": "• Wheat flour: ...\n• Palm oil: ...\n• Salt: ...",
+  "analysis": "Plain-English explanation",
+  "risk_score": 0.42,
   "risk_level": "medium",
-  "risk_score": 0.63,
-  "risk_factors": ["High sodium", "Added fats"]
+  "risk_factors": ["Added sugars", "High sodium / salt"]
 }
 
-Notes:
-- risk_score is expected to be in the range 0..1 (higher means more concern)
-- risk_level should align with the score thresholds used by the backend
+---
+
+## Deployment
+
+Frontend:
+- Hosted on Vercel
+- Root directory set to frontend
+- Uses environment variable:
+  REACT_APP_API_URL=https://foodbuddy-backend-x9qp.onrender.com
+
+Backend:
+- Hosted on Render
+- Root directory set to backend
+- Start command:
+  uvicorn main:app --host 0.0.0.0 --port $PORT
+
+---
 
 ## Disclaimer
 
-FoodBuddy is an educational prototype. It does not replace professional medical or dietary advice.
+FoodBuddy is an educational prototype.  
+It is not medical advice and should not replace professional guidance.
 
-## Why this exists
+---
 
-Food labels are hard to interpret quickly and often trigger unnecessary anxiety. FoodBuddy aims to reduce confusion by explaining what ingredients do, what trade-offs they introduce, and where the science or impact depends on dose and personal factors.
-
-## Possible improvements
-
-- Return structured ingredient cards from the backend instead of parsing bullet text
-- Add evidence-strength indicators (strong/mixed/limited) per ingredient
-- Support product-to-product comparison (two ingredient lists side-by-side)
-- Add follow-up question chips (allergies, goals, medical context)
-- Optional enrichment via public datasets (e.g., OpenFoodFacts) without turning the project into a database browser
-
-## Author
-
-Freya Sheth
+Built to make food labels easier to understand.
