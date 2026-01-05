@@ -301,3 +301,6 @@ async def analyze(req: AnalyzeRequest):
 @app.get("/")
 async def root():
     return {"message": "FoodBuddy API is running!"}
+@app.get("/cors-check")
+async def cors_check():
+    return {"ok": True}
