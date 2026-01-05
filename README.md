@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# FoodBuddy
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+FoodBuddy is an ingredient copilot that translates food labels into plain-English explanations, highlights what’s worth paying attention to, and communicates trade-offs and uncertainty instead of pretending there’s a single “good vs bad” answer.
 
-## Available Scripts
+## What it does
 
-In the project directory, you can run:
+- Paste an ingredient list from any packaged food label
+- Get a clear explanation for each ingredient in simple language
+- See an overall risk signal (low / medium / high) and a numeric score
+- Get short “watch-outs” (e.g., high sodium, added sugars, oils, additives)
+- Transparency-first: it reminds you when effects depend on portion size, frequency, and personal context
 
-### `npm start`
+## Tech stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Frontend:
+- React (Create React App)
+- Axios
+- Custom CSS UI
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Backend:
+- FastAPI (Python)
+- JSON API
+- Rule/heuristic ingredient analysis (prototype)
 
-### `npm test`
+## Project structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+foodbuddy/
+  backend/
+  frontend/
+  README.md
+  .gitignore
 
-### `npm run build`
+## Run locally
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1) Backend (FastAPI)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+From the project root:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+cd backend
 
-### `npm run eject`
+Create and activate a virtual environment:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Windows (PowerShell):
+python -m venv .venv
+.venv\Scripts\activate
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+macOS / Linux:
+python -m venv .venv
+source .venv/bin/activate
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Install dependencies and start the server:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+pip install -r requirements.txt
+uvicorn main:app --reload
 
-## Learn More
+Backend URL:
+http://127.0.0.1:8000
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 2) Frontend (React)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+From the project root:
 
-### Code Splitting
+cd frontend
+npm install
+npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Frontend URL:
+http://localhost:3000
 
-### Analyzing the Bundle Size
+## API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+POST /analyze
 
-### Making a Progressive Web App
+Request body:
+{
+  "ingredients": "wheat flour, palm oil, salt, monosodium glutamate"
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Response (example):
+{
+  "analysis": "• Wheat flour: ...\n• Palm oil: ...\n• Salt: ...",
+  "risk_level": "medium",
+  "risk_score": 0.63,
+  "risk_factors": ["High sodium", "Added fats"]
+}
 
-### Advanced Configuration
+Notes:
+- risk_score is expected to be in the range 0..1 (higher means more concern)
+- risk_level should align with the score thresholds used by the backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Disclaimer
 
-### Deployment
+FoodBuddy is an educational prototype. It does not replace professional medical or dietary advice.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Why this exists
 
-### `npm run build` fails to minify
+Food labels are hard to interpret quickly and often trigger unnecessary anxiety. FoodBuddy aims to reduce confusion by explaining what ingredients do, what trade-offs they introduce, and where the science or impact depends on dose and personal factors.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Possible improvements
+
+- Return structured ingredient cards from the backend instead of parsing bullet text
+- Add evidence-strength indicators (strong/mixed/limited) per ingredient
+- Support product-to-product comparison (two ingredient lists side-by-side)
+- Add follow-up question chips (allergies, goals, medical context)
+- Optional enrichment via public datasets (e.g., OpenFoodFacts) without turning the project into a database browser
+
+## Author
+
+Freya Sheth
